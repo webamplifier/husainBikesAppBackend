@@ -6,18 +6,17 @@ const HELPERS = require('../Helpers/helpers');
 router.list = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
-    let product_list = [];
-    let tax_list = HELPERS.tax_arr
+    let vehicle_list = [];
 
-    await knex('products').where('restaurent_id', req.user_data.restaurent_id).orderBy("id", "desc").then(response => {
+    await knex('vehicles').orderBy("id", "desc").then(response => {
         if (response) {
             status = 200;
-            message = 'Product list has been fetched successfully!';
-            product_list = response;
+            message = 'Vehicle list has been fetched successfully!';
+            vehicle_list = response;
         }
     }).catch(err => console.log(err))
 
-    return res.json({ status, message, product_list, tax_list })
+    return res.json({ status, message, vehicle_list })
 }
 
 // this below function is used to create the products
@@ -28,19 +27,17 @@ router.create = async (req, res) => {
 
     let create_obj = {
         uuid: await HELPERS.getKnexUuid(knex),
-        price: inputs.price,
-        name: inputs.product_name,
-        stock_quantity: inputs.stock_quantity,
-        created_by: req.user_data.id,
-        created_by_name: req.user_data.name,
+        bike_name: inputs.name,
+        bike_number_plate: inputs.number_plate,
+        user_id: req.user_data.id,
+        user_name: req.user_data.name,
         created_at: HELPERS.dateTime(),
-        restaurent_id: req.user_data.restaurent_id
     }
 
-    await knex('products').insert(create_obj).then(response => {
+    await knex('vehicles').insert(create_obj).then(response => {
         if (response) {
             status = 200;
-            message = 'Product has been created successfully!';
+            message = 'Vehicle has been created successfully!';
         }
     }).catch(err => console.log(err))
 
@@ -52,17 +49,17 @@ router.fetchById = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
     let { id } = req.params;
-    let product_detail = {};
+    let vehicle_detail = {};
 
-    await knex('products').where('id', id).where("restaurent_id", req.user_data.restaurent_id).then(response => {
+    await knex('vehicles').where('id', id).then(response => {
         if (response.length > 0) {
             status = 200;
-            message = 'Product has been fetched successfully!';
-            product_detail = response[0];
+            message = 'Vehicle has been fetched successfully!';
+            vehicle_detail = response[0];
         }
     }).catch(err => console.log(err));
 
-    return res.json({ status, message, product_detail });
+    return res.json({ status, message, vehicle_detail });
 }
 
 // this below function is used to update the product
@@ -72,18 +69,15 @@ router.update = async (req, res) => {
     let { id } = req.params;
     let inputs = req.body;
 
-    console.log(inputs);
-
     let update_obj = {
-        price: inputs.price,
-        name: inputs.product_name,
-        stock_quantity: inputs.stock_quantity,
+        bike_name: inputs.name,
+        bike_number_plate: inputs.number_plate,
     }
 
-    await knex('products').where('id', id).where("restaurent_id", req.user_data.restaurent_id).update(update_obj).then(response => {
+    await knex('vehicles').where('id', id).update(update_obj).then(response => {
         if (response) {
             status = 200;
-            message = 'Product has been updated successfully!';
+            message = 'Vehicle has been updated successfully!';
         }
     }).catch(err => console.log(err))
 
@@ -95,12 +89,11 @@ router.delete = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
     let { id } = req.params;
-    let inputs = req.body;
 
-    await knex('products').where('id', id).where("restaurent_id", req.user_data.restaurent_id).del().then(response => {
+    await knex('vehicles').where('id', id).del().then(response => {
         if (response) {
             status = 200;
-            message = 'Product has been deleted successfully!';
+            message = 'Vehicle has been deleted successfully!';
         }
     }).catch(err => console.log(err))
 
