@@ -1,0 +1,18 @@
+/husainBikes/node_modules/
+/husainBikes/.expo/
+/husainBikes/dist/
+/husainBikes/npm-debug.*
+/husainBikes/*.jks
+/husainBikes/*.p8
+/husainBikes/*.p12
+/husainBikes/*.key
+/husainBikes/*.mobileprovision
+/husainBikes/*.orig.*
+/husainBikes/web-build/
+
+# macOS
+/husainBikes/.DS_Store
+
+
+# nodejs
+/backend/node_modules
