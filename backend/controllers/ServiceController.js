@@ -105,10 +105,19 @@ router.completed = async (req, res) =>{
         status: 4
     }
 
-    await knex('services').where('id', id).where("assign_id",req.user_data.id).update(complete_obj).then(response => {
-        if (response) {
-            status = 200;
-            message = 'Service has been completed successfully!';
+    await knex('services').where('id', id).then( async response => {
+        
+        if (response[0].assign_id == req.user_data.id) {    
+            await knex('services').where('id', id).update(complete_obj).then(response1 => {
+                if (response1) {
+                    status = 200;
+                    message = 'Service has been completed successfully!';
+                }
+            }).catch(err => console.log(err))
+        }
+        else{
+            status = 400;
+            message="You cannot perform this action";
         }
     }).catch(err => console.log(err))
 
@@ -127,8 +136,8 @@ router.delete = async (req, res) => {
             message = 'Service cannot be deleted now';
         }
         else{
-            await knex('services').where('id', id).del().then(response => {
-                if (response) {
+            await knex('services').where('id', id).del().then(response1 => {
+                if (response1) {
                     status = 200;
                     message = 'Service has been deleted successfully!';
                 }
