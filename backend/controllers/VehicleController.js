@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const HELPERS = require('../Helpers/helpers');
 
-// this below function is used to get the list of products
+// this below function is used to get the list of vehicles
 router.list = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
@@ -19,7 +19,7 @@ router.list = async (req, res) => {
     return res.json({ status, message, vehicle_list })
 }
 
-// this below function is used to create the products
+// this below function is used to create the vehicles
 router.create = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
@@ -44,7 +44,7 @@ router.create = async (req, res) => {
     return res.json({ status, message })
 }
 
-// this below function is used to fetch the product by id
+// this below function is used to fetch the vehicle by id
 router.fetchById = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
@@ -62,7 +62,7 @@ router.fetchById = async (req, res) => {
     return res.json({ status, message, vehicle_detail });
 }
 
-// this below function is used to update the product
+// this below function is used to update the vehicle
 router.update = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
@@ -84,7 +84,7 @@ router.update = async (req, res) => {
     return res.json({ status, message })
 }
 
-// this below function is used to delete the product
+// this below function is used to delete the vehicle
 router.delete = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
