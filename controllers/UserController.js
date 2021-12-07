@@ -53,10 +53,10 @@ router.signup = async (req, res) => {
             uuid: await HELPERS.getKnexUuid(knex),
             name: inputs.name,
             email: inputs.email,
-            mobile: inputs.mobile,
+            mobile: '',
             password: MD5(inputs.password),
             forgot_password_token: null,
-            company_name: inputs.company_name,
+            company_name: '',
             role: inputs.role? inputs.role :3,
             created_at: await HELPERS.dateTime()
         }
