@@ -16,3 +16,4 @@
 
 # nodejs
 node_modules
+.env
