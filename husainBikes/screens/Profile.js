@@ -23,7 +23,7 @@ const Profile = (props) => {
                         </View>
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={()=>props.navigation.navigate("Vehicles")}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <MaterialCommunityIcons name="bike-fast" size={18} color="black" />
                             <Text style={styles.card_text}>Vehicles</Text>

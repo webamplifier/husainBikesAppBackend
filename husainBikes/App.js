@@ -11,11 +11,18 @@ import ForgotPasswordEmail from './screens/ForgotPassword';
 import Home from './screens/Home'
 import Profile from './screens/Profile';
 import ProfileInformation from './screens/ProfileInformation';
+import Vehicles from './screens/Vehicles';
+import AddVehicle from './screens/AddVehicle';
+
+import {init} from './db'
 
 
 
 export default function App() {
   const Stack = createStackNavigator();
+  React.useEffect(()=>{
+    init().then(()=>console.log('success')).catch(err=>console.log(err))
+  },[])
   return (
     <NavigationContainer>
       <SafeAreaProvider>
@@ -34,6 +41,8 @@ export default function App() {
           }} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="ProfileInformation" component={ProfileInformation} />
+          <Stack.Screen name="Vehicles" component={Vehicles} />
+          <Stack.Screen name="AddVehicle" component={AddVehicle} />
         </Stack.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>
