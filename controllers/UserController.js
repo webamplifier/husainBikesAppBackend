@@ -75,9 +75,6 @@ router.signup = async (req, res) => {
                         name: inputs.name,
                         email: inputs.email,
                         mobile: '',
-                        password: MD5(inputs.password),
-                        forgot_password_token: null,
-                        company_name: '',
                         role: inputs.role ? inputs.role : 3,
                         token : jwt.sign({ user_data }, 'secret_electric_erp')
                     };
