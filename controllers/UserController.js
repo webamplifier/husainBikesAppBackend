@@ -67,11 +67,12 @@ router.signup = async (req, res) => {
             status = 400;
             message = 'User with this email already exist'
         } else {
-            await knex('users').insert(create_obj).then(response => {
+            await knex('users').insert(create_obj,'id').then(response => {
                 if (response) {
                     status = 200;
                     message = 'User has been logged in successfully!';
                     user_data = {
+                        user_id : response[0],
                         name: inputs.name,
                         email: inputs.email,
                         mobile: '',
