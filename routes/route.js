@@ -7,7 +7,7 @@ const Middlewares = require('../middlewares/Middleware');
 const router = express.Router();
 
 // user related routes
-router.post('/login',Middlewares.checkAuth,UserController.login);
+router.post('/login',UserController.login);
 router.get('/userlist',Middlewares.checkAuth,UserController.list);
 router.post('/signup',UserController.signup);
 router.get('/userById/:id',Middlewares.checkAuth,UserController.fetchById);
