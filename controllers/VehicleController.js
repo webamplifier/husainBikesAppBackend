@@ -34,12 +34,20 @@ router.create = async (req, res) => {
         created_at: HELPERS.dateTime(),
     }
 
-    await knex('vehicles').insert(create_obj).then(response => {
-        if (response) {
-            status = 200;
-            message = 'Vehicle has been created successfully!';
+    await knex('vehicles').where("bike_number_plate", inputs.number_plate).where("user_id", req.user_data.id).then(response1 => {
+        if (response1.length > 0) {
+            status = 300;
+            message = "Vehicle already exists with this plate number"
+        } else {
+            await knex('vehicles').insert(create_obj).then(response => {
+                if (response) {
+                    status = 200;
+                    message = 'Vehicle has been created successfully!';
+                }
+            }).catch(err => console.log(err))
         }
-    }).catch(err => console.log(err))
+    })
+
 
     return res.json({ status, message })
 }
