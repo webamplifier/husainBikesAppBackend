@@ -30,4 +30,23 @@ router.post('/reachedservice/:id',Middlewares.checkAuth,ServiceController.reache
 router.post('/completeservice/:id',Middlewares.checkAuth,ServiceController.completed);
 router.get('/deleteservice/:id',Middlewares.checkAuth,ServiceController.delete);
 
+
+// fetch bikes
+router.get('/fetchBikes',async (req,res) => {
+    let bikes = [
+        'Honda unicorn CB160',
+        'Bajaj boxer bm150',
+        'Hero hunk 150',
+        'Tvs appache rtr 180',
+        'Tvs stryker 125',
+        'Bajaj pulsar 150',
+        'Tvs xl-super heavy duty  70',
+        'Tvs star city',
+        'Bajaj platina',
+        'Other'
+    ]
+
+    return res.json({status : 200,message : 'Bikes has been fetched successfully!',bikes})
+})
+
 module.exports = router;
