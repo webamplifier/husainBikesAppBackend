@@ -34,7 +34,7 @@ router.create = async (req, res) => {
         created_at: HELPERS.dateTime(),
     }
 
-    await knex('vehicles').where("bike_number_plate", inputs.number_plate).where("user_id", req.user_data.id).then(response1 => {
+    await knex('vehicles').where("bike_number_plate", inputs.number_plate).where("user_id", req.user_data.id).then(async response1 => {
         if (response1.length > 0) {
             status = 300;
             message = "Vehicle already exists with this plate number"
