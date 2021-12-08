@@ -8,7 +8,7 @@ router.list = async (req, res) => {
     let message = 'Oops something went wrong!';
     let vehicle_list = [];
 
-    await knex('vehicles').orderBy("id", "desc").then(response => {
+    await knex('vehicles').orderBy("id", "desc").where("user_id",req.user_data.id).then(response => {
         if (response) {
             status = 200;
             message = 'Vehicle list has been fetched successfully!';
