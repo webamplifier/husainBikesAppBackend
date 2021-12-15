@@ -1,3 +1,6 @@
 node_modules
 .env
 knexfile.js
+._.env
+._.git
+._knexfile.js
