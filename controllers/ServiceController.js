@@ -95,7 +95,7 @@ router.create = async (req, res) => {
         }).catch(err => console.log(err))
 
         return res.json({ status, message })
-    } elseif(priority_user_1.length > 0){
+    } else if(priority_user_1.length > 0){
         create_obj['assign_id'] = priority_user_1[0].id;
         create_obj['assign_name'] = priority_user_1[0].name;
         create_obj['assign_dateTime'] = await HELPERS.dateTime();
@@ -109,7 +109,7 @@ router.create = async (req, res) => {
 
         return res.json({ status, message })
 
-    } elseif(priority_user_2.length > 0){
+    } else if(priority_user_2.length > 0){
         create_obj['assign_id'] = priority_user_2[0].id;
         create_obj['assign_name'] = priority_user_2[0].name;
         create_obj['assign_dateTime'] = await HELPERS.dateTime();
@@ -122,7 +122,7 @@ router.create = async (req, res) => {
         }).catch(err => console.log(err))
 
         return res.json({ status, message })
-    } elseif(priority_user_3.length > 0){
+    } else if(priority_user_3.length > 0){
         create_obj['assign_id'] = priority_user_3[0].id;
         create_obj['assign_name'] = priority_user_3[0].name;
         create_obj['assign_dateTime'] = await HELPERS.dateTime();
@@ -135,7 +135,7 @@ router.create = async (req, res) => {
         }).catch(err => console.log(err))
 
         return res.json({ status, message })
-    } elseif(priority_user_4.length > 0){
+    } else if(priority_user_4.length > 0){
         create_obj['assign_id'] = priority_user_4[0].id;
         create_obj['assign_name'] = priority_user_4[0].name;
         create_obj['assign_dateTime'] = await HELPERS.dateTime();
@@ -148,7 +148,7 @@ router.create = async (req, res) => {
         }).catch(err => console.log(err))
 
         return res.json({ status, message })
-    } elseif(priority_user_5.length > 0){
+    } else if(priority_user_5.length > 0){
         create_obj['assign_id'] = priority_user_5[0].id;
         create_obj['assign_name'] = priority_user_5[0].name;
         create_obj['assign_dateTime'] = await HELPERS.dateTime();
