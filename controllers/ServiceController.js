@@ -25,6 +25,8 @@ router.create = async (req, res) => {
     let message = 'Oops something went wrong!';
     let inputs = req.body;
 
+    
+
     let create_obj = {
         uuid: await HELPERS.getKnexUuid(knex),
         user_id: req.user_data.id,
