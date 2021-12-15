@@ -77,8 +77,9 @@ router.create = async (req, res) => {
         user_name: req.user_data.name,
         user_longitude: inputs.longitude,
         user_latitude: inputs.latitude,
-        user_place: inputs.place,
-        description: inputs.description,
+        vehicle_id : inputs.vehicle_id,
+        vehicle_name : inputs.vehicle_name,
+        description: inputs.reason,
         demand_dateTime: await HELPERS.dateTime(),
     }
 
