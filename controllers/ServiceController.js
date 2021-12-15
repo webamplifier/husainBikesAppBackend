@@ -34,7 +34,7 @@ router.create = async (req, res) => {
     let priority_user_4 = [];
     let priority_user_5 = [];
 
-    await knex('users').where('active', 1).then(async response => {
+    await knex('users').where('role',2).where('active', 1).then(async response => {
         if (response.length > 0) {
             for (let i = 0; i < response.length; i++) {
 
