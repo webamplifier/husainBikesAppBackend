@@ -8,11 +8,13 @@ router.list = async (req, res) => {
     let message = 'Oops something went wrong!';
     let service_list = [];
 
-    await knex('services').where("user_id", req.user_data.id).orderBy("id", "desc").then(response => {
-        if (response) {
+    let query = `Select * from services where services.user_id = '${req.user_data.id}' or services.assign_id = '${req.user_data.id}'  order by services.id desc `
+
+    await knex.raw(query).then(response => {
+        if (response[0]) {
             status = 200;
             message = 'Service list has been fetched successfully!';
-            service_list = response;
+            service_list = response[0];
         }
     }).catch(err => console.log(err))
 
