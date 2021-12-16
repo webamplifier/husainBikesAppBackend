@@ -8,7 +8,7 @@ router.list = async (req, res) => {
     let message = 'Oops something went wrong!';
     let service_list = [];
 
-    let query = `Select * from services where services.user_id = '${req.user_data.id}' or services.assign_id = '${req.user_data.id}'  order by services.id desc `
+    let query = `Select * from services where (services.user_id = '${req.user_data.id}' or services.assign_id = '${req.user_data.id}')  order by services.id desc `
 
     await knex.raw(query).then(response => {
         if (response[0]) {
