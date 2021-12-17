@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const router = require("./routes/route");
+const socketIo = require('socket.io')
+const  http = require('http');
 
 const Multer = require('multer');
 const path = require('path');
@@ -32,9 +34,21 @@ app.use((req,res,next) => {
     next();
 })
 
+const server = http.createServer(app);
+const io = socketIo(server,{
+    cors : {
+        origin : '*',
+        credentials : true
+    }
+});
+
+io.on('connection',(socket) => {
+    global.socket = socket;
+})
+
 app.use("/api",router);
 
-app.listen(port,()=>{
+server.listen(port,()=>{
     console.log("Port is up",port)
 })
 
