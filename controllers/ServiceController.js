@@ -170,6 +170,21 @@ router.create = async (req, res) => {
 
 }
 
+// this will used to update the push token
+router.updatePushToken = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+
+    await knex("users").where("id",req.user_data.id).update({
+        "push_token" : req.body.token
+    }).then(response=>{
+        status = 200;
+        message = "Token has been updated successfully!"
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
+
 //this is to assign a service
 router.assign = async (req, res) => {
     let status = 500;
