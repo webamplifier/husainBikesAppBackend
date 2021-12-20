@@ -101,7 +101,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
     } else if (priority_user_1.length > 0) {
         create_obj['assign_id'] = priority_user_1[0].id;
         create_obj['assign_name'] = priority_user_1[0].name;
@@ -117,7 +117,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
 
     } else if (priority_user_2.length > 0) {
         create_obj['assign_id'] = priority_user_2[0].id;
@@ -134,7 +134,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
     } else if (priority_user_3.length > 0) {
         create_obj['assign_id'] = priority_user_3[0].id;
         create_obj['assign_name'] = priority_user_3[0].name;
@@ -150,7 +150,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
     } else if (priority_user_4.length > 0) {
         create_obj['assign_id'] = priority_user_4[0].id;
         create_obj['assign_name'] = priority_user_4[0].name;
@@ -166,7 +166,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
     } else if (priority_user_5.length > 0) {
         create_obj['assign_id'] = priority_user_5[0].id;
         create_obj['assign_name'] = priority_user_5[0].name;
@@ -182,7 +182,7 @@ router.create = async (req, res) => {
             }
         }).catch(err => console.log(err))
 
-        return res.json({ status, message,push_token })
+        return res.json({ status, message, push_token })
     }
 
 }
@@ -221,14 +221,46 @@ router.reached = async (req, res) => {
         status: 3
     }
 
-    await knex('services').where('id', id).update(reached_obj).then(response => {
-        if (response) {
-            status = 200;
-            message = 'Assignee has been reached successfully!';
-        }
-    }).catch(err => console.log(err))
+    if (req.user_data.role == 2) {
+        await knex('services').where('id', id).update(reached_obj).then(response => {
+            if (response) {
+                status = 200;
+                message = 'Assignee has been reached successfully!';
+            }
+        }).catch(err => console.log(err))
+    } else {
+        status = 400;
+        message = "You are not authorized to do it"
+    }
 
     return res.json({ status, message })
+}
+
+// this below function is used to get the service detail by id
+router.getServiceDetail = async (req, res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let { id } = req.params;
+    let service_detail = {};
+    let query = `SELECT
+    services.id,services.vehicle_name,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile
+    FROM
+    services
+    LEFT JOIN users ON services.user_id = users.id
+    LEFT JOIN users as userAsign on services.assign_id = userAsign.id
+    LEFT JOIN vehicles on services.vehicle_id = vehicles.id
+    where services.id = '${id}'
+    `
+
+    await knex.raw(query).then(response=>{
+        if (response[0].length > 0){
+            service_detail = response[0][0];
+            status = 200;
+            message = "Service detail has been fetched successfully!"
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message,service_detail})
 }
 
 //this is to complete a service
