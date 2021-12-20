@@ -44,6 +44,7 @@ const io = socketIo(server,{
 
 io.on('connection',(socket) => {
     global.socket = socket;
+    socket.emit("userTest",{"msg" : "hy"})
 })
 
 app.use("/api",router);
