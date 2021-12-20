@@ -24,20 +24,22 @@ const tax_arr = [
     { value: 18, label: '18%' },
 ]
 
-async function sendTheNotification(knex, id) {
-    let token = ""
-    await knex("users").where("id", id).then(async response => {
-        if (response.length > 0) {
-            if (response[0].push_token) {
-                token = response[0].push_token
-                return token
+function sendTheNotification(knex, id) {
+    const promise = new Promise(async function (resolve,reject){
+        await knex("users").where("id", id).then(response => {
+            if (response.length > 0) {
+                if (response[0].push_token) {
+                    resolve(response[0].push_token)
+                }else{
+                    resolve("")
+                }
             }else{
-                return ""
+                resolve("")
             }
-        }else{
-            return ""
-        }
-    }).catch(err=>console.log(err))
+        }).catch(err=>reject(err))
+    })    
+
+    return promise;
 }
 
 
