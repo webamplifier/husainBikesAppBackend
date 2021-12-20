@@ -92,6 +92,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_0[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
@@ -105,6 +106,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_1[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
@@ -119,6 +121,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_2[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
@@ -132,6 +135,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_3[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
@@ -145,6 +149,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_4[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
@@ -158,6 +163,7 @@ router.create = async (req, res) => {
         create_obj['status'] = 2
         await knex('services').insert(create_obj).then(response => {
             if (response) {
+                HELPERS.sendTheNotification("New Service","You have been assigned new service",knex,priority_user_5[0].id)
                 status = 200;
                 message = 'Service has been created successfully!';
             }
