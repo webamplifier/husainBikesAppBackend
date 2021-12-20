@@ -43,6 +43,22 @@ router.list = async (req, res) => {
     return res.json({ status, message, users_list })
 }
 
+// this will used to update the push token
+router.updatePushToken = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+
+    await knex("users").where("id",req.user_data.id).update({
+        "push_token" : req.body.token
+    }).then(response=>{
+        status = 200;
+        message = "Token has been updated successfully!"
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
+
+
 // this below function is used to create the users
 router.signup = async (req, res) => {
     let status = 500;
