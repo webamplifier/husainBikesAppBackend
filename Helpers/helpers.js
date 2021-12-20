@@ -24,28 +24,20 @@ const tax_arr = [
     { value: 18, label: '18%' },
 ]
 
-function sendTheNotification(title, body, knex, id) {
-    knex("users").where("id", id).then(async response => {
+async function sendTheNotification(knex, id) {
+    let token = ""
+    await knex("users").where("id", id).then(async response => {
         if (response.length > 0) {
             if (response[0].push_token) {
-                const message = {
-                    to: response[0].push_token,
-                    sound: 'default',
-                    title,
-                    body,
-                };
-                fetch('https://exp.host/--/api/v2/push/send', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Accept-encoding': 'gzip, deflate',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(message),
-                })
+                token = response[0].push_token
+                return token
+            }else{
+                return ""
             }
+        }else{
+            return ""
         }
-    })
+    }).catch(err=>console.log(err))
 }
 
 
