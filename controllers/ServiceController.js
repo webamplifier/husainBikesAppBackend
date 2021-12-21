@@ -248,7 +248,7 @@ router.getServiceDetail = async (req, res) => {
     let { id } = req.params;
     let service_detail = {};
     let query = `SELECT
-    services.id,services.service_km,services.vehicle_name,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile
+    services.id,users.push_token,services.service_km,services.vehicle_name,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile
     FROM
     services
     LEFT JOIN users ON services.user_id = users.id
@@ -285,10 +285,15 @@ router.completed = async (req, res) => {
     await knex('services').where('id', id).then(async response => {
 
         if (response[0].assign_id == req.user_data.id) {
-            await knex('services').where('id', id).update(complete_obj).then(response1 => {
+            await knex('services').where('id', id).update(complete_obj).then(async response1 => {
                 if (response1) {
-                    status = 200;
-                    message = 'Service has been completed successfully!';
+                    await knex("services").where("id", id).then(response_service => {
+                        if (response_service.length > 0) {
+                            status = 200;
+                            message = "Service completed successfully!"
+                            socket.emit("changeInService", { "user_id": response_service[0].user_id })
+                        }
+                    })
                 }
             }).catch(err => console.log(err))
         }
