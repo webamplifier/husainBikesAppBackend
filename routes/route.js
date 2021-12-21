@@ -28,6 +28,7 @@ router.get('/servicelist',Middlewares.checkAuth,ServiceController.list);
 router.post('/createservice',Middlewares.checkAuth,ServiceController.create);
 router.post('/assignservice/:id',Middlewares.checkAuth,ServiceController.assign);
 router.post('/reachedservice/:id',Middlewares.checkAuth,ServiceController.reached);
+router.post('/addKmService/:id',Middlewares.checkAuth,ServiceController.addKM)
 router.post('/completeservice/:id',Middlewares.checkAuth,ServiceController.completed);
 router.get('/deleteservice/:id',Middlewares.checkAuth,ServiceController.delete);
 router.get('/getServiceById/:id',Middlewares.checkAuth,ServiceController.getServiceDetail)

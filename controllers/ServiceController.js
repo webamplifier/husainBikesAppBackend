@@ -320,5 +320,28 @@ router.delete = async (req, res) => {
     return res.json({ status, message })
 }
 
+// this below function will used to add the km
+router.addKM = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let {id} = req.params;
+
+    await knex("services").where("id",id).update({
+        service_km : req.body.km
+    }).then(async response=>{
+        if (response){
+            await knex("services").where("id",id).then(response_service=>{
+                if (response_service.length > 0){
+                    status = 200;
+                    message = "KM updated succesfully!"
+                    socket.emit("changeInService",{"user_id" : response_service[0].user_id })
+                }
+            })
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
+
 module.exports = router;
 
