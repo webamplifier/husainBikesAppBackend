@@ -243,7 +243,7 @@ router.getServiceDetail = async (req, res) => {
     let { id } = req.params;
     let service_detail = {};
     let query = `SELECT
-    services.id,services.srvice_km,services.vehicle_name,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile
+    services.id,services.service_km,services.vehicle_name,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile
     FROM
     services
     LEFT JOIN users ON services.user_id = users.id
