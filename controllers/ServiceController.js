@@ -222,10 +222,15 @@ router.reached = async (req, res) => {
     }
 
     if (req.user_data.role == 2) {
-        await knex('services').where('id', id).update(reached_obj).then(response => {
+        await knex('services').where('id', id).update(reached_obj).then(async response => {
             if (response) {
-                status = 200;
-                message = 'Assignee has been reached successfully!';
+                await knex("services").where("id", id).then(response_service => {
+                    if (response_service.length > 0) {
+                        status = 200;
+                        message = "Driver Reached!"
+                        socket.emit("changeInService", { "user_id": response_service[0].user_id })
+                    }
+                })
             }
         }).catch(err => console.log(err))
     } else {
@@ -252,15 +257,15 @@ router.getServiceDetail = async (req, res) => {
     where services.id = '${id}'
     `
 
-    await knex.raw(query).then(response=>{
-        if (response[0].length > 0){
+    await knex.raw(query).then(response => {
+        if (response[0].length > 0) {
             service_detail = response[0][0];
             status = 200;
             message = "Service detail has been fetched successfully!"
         }
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 
-    return res.json({status,message,service_detail})
+    return res.json({ status, message, service_detail })
 }
 
 //this is to complete a service
@@ -321,26 +326,26 @@ router.delete = async (req, res) => {
 }
 
 // this below function will used to add the km
-router.addKM = async (req,res) => {
+router.addKM = async (req, res) => {
     let status = 500;
     let message = "Oops something went wrong!";
-    let {id} = req.params;
+    let { id } = req.params;
 
-    await knex("services").where("id",id).update({
-        service_km : req.body.km
-    }).then(async response=>{
-        if (response){
-            await knex("services").where("id",id).then(response_service=>{
-                if (response_service.length > 0){
+    await knex("services").where("id", id).update({
+        service_km: req.body.km
+    }).then(async response => {
+        if (response) {
+            await knex("services").where("id", id).then(response_service => {
+                if (response_service.length > 0) {
                     status = 200;
                     message = "KM updated succesfully!"
-                    socket.emit("changeInService",{"user_id" : response_service[0].user_id })
+                    socket.emit("changeInService", { "user_id": response_service[0].user_id })
                 }
             })
         }
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 
-    return res.json({status,message})
+    return res.json({ status, message })
 }
 
 module.exports = router;
