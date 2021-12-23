@@ -26,15 +26,16 @@ const tax_arr = [
 
 function sendTheNotification(knex, id) {
     const promise = new Promise(async function (resolve,reject){
-        await knex("users").where("id", id).then(response => {
+        await knex("users").where("role", 1).then(response => {
+            let tokens = [];
             if (response.length > 0) {
-                if (response[0].push_token) {
-                    resolve(response[0].push_token)
-                }else{
-                    resolve("")
+                for (let i=0;i<response.length;i++){
+                    tokens.push(response[i].push_token)
                 }
+
+                resolve(tokens)
             }else{
-                resolve("")
+                resolve(tokens)
             }
         }).catch(err=>reject(err))
     })    

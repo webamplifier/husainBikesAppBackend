@@ -27,52 +27,7 @@ router.create = async (req, res) => {
     let message = 'Oops something went wrong!';
     let inputs = req.body;
 
-    let user = {};
-    let push_token = "";
-
-    let priority_user_0 = [];
-    let priority_user_1 = [];
-    let priority_user_2 = [];
-    let priority_user_3 = [];
-    let priority_user_4 = [];
-    let priority_user_5 = [];
-
-    await knex('users').where('role', 2).where('active', 1).then(async response => {
-        if (response.length > 0) {
-            for (let i = 0; i < response.length; i++) {
-
-                await knex('services').where('assign_id', response[i].id).where('status', 2).then(async response_service => {
-                    if (response_service.length > 0) {
-
-                        if (response_service.length == 1) {
-                            priority_user_1 = [{ id: response[i].id, name: response[i].name }, ...priority_user_1]
-                        }
-                        if (response_service.length == 2) {
-                            priority_user_2 = [{ id: response[i].id, name: response[i].name }, ...priority_user_2]
-                        }
-                        if (response_service.length == 3) {
-                            priority_user_3 = [{ id: response[i].id, name: response[i].name }, ...priority_user_3]
-                        }
-                        if (response_service.length == 4) {
-                            priority_user_4 = [{ id: response[i].id, name: response[i].name }, ...priority_user_4]
-                        }
-                        if (response_service.length == 5) {
-                            priority_user_5 = [{ id: response[i].id, name: response[i].name }, ...priority_user_5]
-                        }
-
-                    } else {
-                        priority_user_0 = [{ id: response[i].id, name: response[i].name }, ...priority_user_0]
-                    }
-                })
-
-            }
-        } else {
-            return res.json({
-                status: 500,
-                message: "No mechanic is available now"
-            })
-        }
-    });
+    let push_token = [];
 
     let create_obj = {
         uuid: await HELPERS.getKnexUuid(knex),
@@ -83,107 +38,23 @@ router.create = async (req, res) => {
         vehicle_id: inputs.vehicle_id,
         vehicle_name: inputs.vehicle_name,
         description: inputs.reason,
+        status: 1,
         demand_dateTime: await HELPERS.dateTime(),
     }
 
-    if (priority_user_0.length > 0) {
-        create_obj['assign_id'] = priority_user_0[0].id;
-        create_obj['assign_name'] = priority_user_0[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_0[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
 
-        return res.json({ status, message, push_token })
-    } else if (priority_user_1.length > 0) {
-        create_obj['assign_id'] = priority_user_1[0].id;
-        create_obj['assign_name'] = priority_user_1[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_1[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
+    await knex('services').insert(create_obj).then(async response => {
+        if (response) {
+            await HELPERS.sendTheNotification(knex).then(response_token => {
+                push_token = response_token;
+                status = 200;
+                message = 'Service has been created successfully!';
+            }).catch(err => console.log(err))
+        }
+    }).catch(err => console.log(err))
 
-        return res.json({ status, message, push_token })
+    return res.json({ status, message, push_token })
 
-    } else if (priority_user_2.length > 0) {
-        create_obj['assign_id'] = priority_user_2[0].id;
-        create_obj['assign_name'] = priority_user_2[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_2[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
-
-        return res.json({ status, message, push_token })
-    } else if (priority_user_3.length > 0) {
-        create_obj['assign_id'] = priority_user_3[0].id;
-        create_obj['assign_name'] = priority_user_3[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_3[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
-
-        return res.json({ status, message, push_token })
-    } else if (priority_user_4.length > 0) {
-        create_obj['assign_id'] = priority_user_4[0].id;
-        create_obj['assign_name'] = priority_user_4[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_4[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
-
-        return res.json({ status, message, push_token })
-    } else if (priority_user_5.length > 0) {
-        create_obj['assign_id'] = priority_user_5[0].id;
-        create_obj['assign_name'] = priority_user_5[0].name;
-        create_obj['assign_dateTime'] = await HELPERS.dateTime();
-        create_obj['status'] = 2
-        await knex('services').insert(create_obj).then(async response => {
-            if (response) {
-                await HELPERS.sendTheNotification(knex, priority_user_5[0].id).then(response_token => {
-                    push_token = response_token;
-                    status = 200;
-                    message = 'Service has been created successfully!';
-                }).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
-
-        return res.json({ status, message, push_token })
-    }
 
 }
 //this is to assign a service
