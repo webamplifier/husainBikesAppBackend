@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/login',UserController.login);
 router.get('/userlist',Middlewares.checkAuth,UserController.list);
 router.post('/signup',UserController.signup);
+router.post('/createUser',Middlewares.checkAuth,UserController.createUser)
 router.get('/userById/:id',Middlewares.checkAuth,UserController.fetchById);
 router.post('/updateuser/:id',Middlewares.checkAuth,UserController.update);
 router.get('/deleteuser/:id',Middlewares.checkAuth,UserController.delete);
