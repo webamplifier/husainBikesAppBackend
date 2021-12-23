@@ -108,31 +108,37 @@ router.createUser = async (req,res) => {
     let message = 'Oops something went wrong!';
     let inputs = req.body;
 
-    let create_obj = {
-        uuid: await HELPERS.getKnexUuid(knex),
-        name: inputs.name,
-        email: inputs.email,
-        mobile: inputs.mobile,
-        password: MD5(inputs.password),
-        forgot_password_token: null,
-        company_name: '',
-        role: 2,
-        created_at: await HELPERS.dateTime()
-    }
-
-    await knex('users').where('email', inputs.email).then(async response => {
-        if (response.length > 0) {
-            status = 400;
-            message = 'User with this email already exist'
-        } else {
-            await knex('users').insert(create_obj).then(response => {
-                if (response) {
-                    status = 200;
-                    message = 'User has been created successfully!';
-                }
-            }).catch(err => console.log(err))
+    if (req.user_data.role == 1){
+        let create_obj = {
+            uuid: await HELPERS.getKnexUuid(knex),
+            name: inputs.name,
+            email: inputs.email,
+            mobile: inputs.mobile,
+            password: MD5(inputs.password),
+            forgot_password_token: null,
+            company_name: '',
+            role: 2,
+            created_at: await HELPERS.dateTime()
         }
-    })
+    
+        await knex('users').where('email', inputs.email).then(async response => {
+            if (response.length > 0) {
+                status = 400;
+                message = 'User with this email already exist'
+            } else {
+                await knex('users').insert(create_obj).then(response => {
+                    if (response) {
+                        status = 200;
+                        message = 'User has been created successfully!';
+                    }
+                }).catch(err => console.log(err))
+            }
+        })
+    }else{
+        status = 300;
+        message = "You are not authorized"
+    }
+    
     return res.json({ status, message })
 }
 
