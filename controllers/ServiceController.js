@@ -74,22 +74,47 @@ router.assign = async (req, res) => {
     let message = 'Oops something went wrong!';
     let { id } = req.params;
     let inputs = req.body;
+    let tokens = []
 
     let assign_obj = {
-        assign_id: inputs.assign_id,
-        assign_name: inputs.assign_name,
+        assign_id: inputs.mechanic_id,
+        assign_name: inputs.mechanic_name,
         assign_dateTime: await HELPERS.dateTime(),
         status: 2
     }
 
-    await knex('services').where('id', id).update(assign_obj).then(response => {
+    await knex('services').where('id', id).update(assign_obj).then(async response => {
         if (response) {
+            await knex("users").where("id",inputs.mechanic_id).then(response_1 => {
+                if (response_1.length > 0){
+                    const push_token = response_1[0].push_token
+                    if (push_token){
+                        tokens.push(push_token)
+                    }
+                }
+            }).catch(err=>console.log(err))
+
+            await knex("services").where("id",id).then(async response_2 => {
+                if (response_2.length > 0){
+                    let user_id = response_2[0].user_id;
+
+                    await knex("users").where("id",user_id).then(response_3 => {
+                        if (response_3.length > 0){
+                            const push_token = response_3[0].push_token;
+                            if (push_token){
+                                tokens.push(response_3[0].push_token)
+                            }
+                        }
+                    }).catch(err=>console.log(err))
+                }
+            }).catch(err=>console.log(err))
+
             status = 200;
             message = 'Service has been assigned successfully!';
         }
     }).catch(err => console.log(err))
 
-    return res.json({ status, message })
+    return res.json({ status, message,tokens })
 }
 
 //this is to denote that assignee has reached the place
