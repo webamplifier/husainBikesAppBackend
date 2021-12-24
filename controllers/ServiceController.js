@@ -59,6 +59,7 @@ router.create = async (req, res) => {
                 push_token = response_token;
                 status = 200;
                 message = 'Service has been created successfully!';
+                socket.emit("newService")
             }).catch(err => console.log(err))
         }
     }).catch(err => console.log(err))
