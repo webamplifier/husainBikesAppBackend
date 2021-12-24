@@ -129,6 +129,12 @@ router.getServiceDetail = async (req, res) => {
     let message = "Oops something went wrong!";
     let { id } = req.params;
     let service_detail = {};
+    let user_list = [];
+
+    await knex("users").where("role",2).then(response=>{
+        user_list = response;
+    }).catch(err=>console.log(err))
+
     let query = `SELECT
     services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
     FROM
@@ -147,7 +153,7 @@ router.getServiceDetail = async (req, res) => {
         }
     }).catch(err => console.log(err))
 
-    return res.json({ status, message, service_detail })
+    return res.json({ status, message, service_detail,user_list })
 }
 
 //this is to complete a service
