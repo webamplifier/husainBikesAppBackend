@@ -68,6 +68,22 @@ router.create = async (req, res) => {
 
 
 }
+
+// this below function is used to fetch the assigned pending service
+router.fetchMechanicPendingService = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let services = [];
+
+    await knex("services").where("assign_id",req.user_data.id).where("status",2).then(response=>{
+        status = 200;
+        message = "Services has been fetched successfully!";
+        services = response;
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message,services})
+}
+
 //this is to assign a service
 router.assign = async (req, res) => {
     let status = 500;
@@ -106,6 +122,8 @@ router.assign = async (req, res) => {
                             }
                         }
                     }).catch(err=>console.log(err))
+
+                    socket.emit("changeInService",{"user_id" : user_id})
                 }
             }).catch(err=>console.log(err))
 
