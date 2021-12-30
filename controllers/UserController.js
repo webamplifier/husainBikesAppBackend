@@ -170,11 +170,13 @@ router.update = async (req, res) => {
         if (response[0].email === inputs.email) {
             let update_obj = {
                 name: inputs.name,
-                email: inputs.email,
-                password: MD5(inputs.password),
                 mobile: inputs.mobile,
                 role: inputs.role ? inputs.role : 3,
                 company_name: inputs.company_name,
+            }
+
+            if (inputs.password){
+                update_obj['password'] = MD5(inputs.password)
             }
 
             await knex('users').where('id', id).update(update_obj).then(response1 => {
