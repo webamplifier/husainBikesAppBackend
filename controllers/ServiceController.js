@@ -223,7 +223,7 @@ router.getServiceDetail = async (req, res) => {
     }).catch(err=>console.log(err))
 
     let query = `SELECT
-    services.assign_dateTime,services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
+    services.remarks,services.assign_dateTime,services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
     FROM
     services
     LEFT JOIN users ON services.user_id = users.id
