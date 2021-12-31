@@ -139,6 +139,46 @@ router.assign = async (req, res) => {
 
 }
 
+// this is to cancel the service
+router.canceled = async (req,res) => {
+    let status = 500;
+    let message = 'Oops something went wrong!';
+    let { id } = req.params;
+
+    let reached_obj = {
+        complete_dateTime: await HELPERS.dateTime(),
+        status: 5,
+        remarks : inputs.remarks 
+    }
+
+    let tokens = [];
+    let query = "select * from users where "
+    await knex("services").where("id",id).update(reached_obj).then(async response=>{
+        if (response){
+            status = 200;
+            message = "Service has been cancelled successfully!"
+            await knex("services").where("id",id).then(async response1=>{
+                if (response1.length > 0){
+                    socket.emit("changeInService",{user_id : response1[1].assign_id})
+                    query = query + `id = '${response1[0].assign_id}' or id = '${response1[0].user_id}' or role = 1`
+
+                    await knex.raw(query).then(response_token=>{
+                        if (response_token.length > 0){
+                            for (let i=0;i<response_token.length;i++){
+                                tokens.push(response_token[i].push_token)
+                            }
+                        }
+                    }).catch(err=>console.log(err))
+                }
+            }).catch(err=>console.log(err))
+        }
+    }).catch(err=>console.log(err))
+
+    if (tokens.length > 0){
+        return res.json({status,message,tokens})
+    }
+}
+
 //this is to denote that assignee has reached the place
 router.reached = async (req, res) => {
     let status = 500;

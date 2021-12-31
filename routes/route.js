@@ -32,6 +32,7 @@ router.post('/assignservice/:id',Middlewares.checkAuth,ServiceController.assign)
 router.get('/reachedservice/:id',Middlewares.checkAuth,ServiceController.reached);
 router.post('/addKmService/:id',Middlewares.checkAuth,ServiceController.addKM)
 router.post('/completeservice/:id',Middlewares.checkAuth,ServiceController.completed);
+router.post('/cancelservice/:id',Middlewares.checkAuth,ServiceController.canceled);
 router.get('/deleteservice/:id',Middlewares.checkAuth,ServiceController.delete);
 router.get('/getServiceById/:id',Middlewares.checkAuth,ServiceController.getServiceDetail)
 router.get("/fetch-mechanic-pending-services",Middlewares.checkAuth,ServiceController.fetchMechanicPendingService)
