@@ -132,7 +132,11 @@ router.assign = async (req, res) => {
         }
     }).catch(err => console.log(err))
 
-    return res.json({ status, message,tokens })
+    if (tokens.length > 0){
+        return res.json({ status, message,tokens })
+        
+    }
+
 }
 
 //this is to denote that assignee has reached the place
