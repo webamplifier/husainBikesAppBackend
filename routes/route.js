@@ -16,6 +16,7 @@ router.post('/updateuser/:id',Middlewares.checkAuth,UserController.update);
 router.get('/deleteuser/:id',Middlewares.checkAuth,UserController.delete);
 router.post('/editPassword/:id',Middlewares.checkAuth,UserController.updatePassword);
 router.post('/update-push-token',Middlewares.checkAuth,UserController.updatePushToken)
+router.post('/update-mechanic/:id',Middlewares.checkAuth,UserController.updateMechanic)
 
 // vehicle routes
 router.get('/vehiclelist',Middlewares.checkAuth,VehicleController.list);

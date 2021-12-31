@@ -159,6 +159,33 @@ router.fetchById = async (req, res) => {
     return res.json({ status, message, user_detail });
 }
 
+// this below function is used to update the mechanic
+router.updateMechanic = async (req,res) => {
+    let status = 500;
+    let message = 'Oops something went wrong!';
+    let { id } = req.params;
+    let inputs = req.body;
+
+    let update_obj = {
+        name: inputs.name,
+        mobile: inputs.mobile,
+    }
+
+    if (inputs.password){
+        update_obj["password"] = MD5(inputs.password);
+    }
+
+    await knex("users").where("id", id).update(update_obj).then(response2 => {
+        if (response2) {
+            status = 200;
+            message = "User has been updated sucessfully!"
+        }
+    }).catch(err => console.log(err))
+
+
+    return res.json({ status, message })
+}
+
 // this below function is used to update the user
 router.update = async (req, res) => {
     let status = 500;
