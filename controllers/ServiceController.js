@@ -52,18 +52,23 @@ router.create = async (req, res) => {
         demand_dateTime: await HELPERS.dateTime(),
     }
 
-
-    await knex('services').insert(create_obj).then(async response => {
-        if (response) {
-            await HELPERS.sendTheNotification(knex).then(response_token => {
-                push_token = response_token;
-                status = 200;
-                message = 'Service has been created successfully!';
-                socket.emit("newService")
+    await knex('services').where("user_id",req.user_data.id).where("status", '!=' , 4).where("status", '!=' , 5).then(async response_service=>{
+        if (response_service.length > 0){
+            status = 500;
+            message = "Service already pending!."
+        }else{
+            await knex('services').insert(create_obj).then(async response => {
+                if (response) {
+                    await HELPERS.sendTheNotification(knex).then(response_token => {
+                        push_token = response_token;
+                        status = 200;
+                        message = 'Service has been created successfully!';
+                        socket.emit("newService")
+                    }).catch(err => console.log(err))
+                }
             }).catch(err => console.log(err))
         }
-    }).catch(err => console.log(err))
-
+    })
     return res.json({ status, message, push_token })
 
 
