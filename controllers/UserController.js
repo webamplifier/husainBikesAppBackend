@@ -148,7 +148,7 @@ router.fetchById = async (req, res) => {
     let message = 'Oops something went wrong!';
     let { id } = req.params;
     let user_detail = {};
-
+    let services = [];
     await knex('users').where('id', id).then(response => {
         if (response.length > 0) {
             status = 200;
@@ -156,7 +156,16 @@ router.fetchById = async (req, res) => {
             user_detail = response[0];
         }
     }).catch(err => console.log(err));
-    return res.json({ status, message, user_detail });
+
+    let query = `select * from services where services.user_id='${id}' or assign_id='${id}' order by services.id desc`;
+
+    await knex.raw(query).then((response) => {
+        if (response[0]){
+            services = response[0];
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({ status, message, services,user_detail });
 }
 
 // this below function is used to update the mechanic
