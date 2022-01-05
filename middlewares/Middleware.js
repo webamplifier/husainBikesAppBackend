@@ -26,7 +26,19 @@ function checkAuth(req, res, next) {
     }
 
     req.user_data = decode_token.user_data;
-    next();
+    await knex("users").where("id",decode_token.user_data.id).then(response=>{
+        if (response.length > 0){
+            let current_user = response[0];
+            if (current_user.active == 1){
+                next();
+            }else{
+                return res.json({
+                    status : 500,
+                    message : "Your account has been blocked!"
+                })
+            }
+        }
+    }).catch(err=>console.log(err))
 }
 
 const checkPermission = (value) => {

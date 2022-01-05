@@ -186,6 +186,24 @@ router.blockUser = async (req,res) => {
     return res.json({status,message})
 }
 
+// this below function will used to un block the user
+router.unBlockUser = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let {id} = req.params;
+
+    await knex("users").where("id",id).update({
+        active : 1
+    }).then(response=>{
+        if (response){
+            status = 200;
+            message = "User has been un blocked successfully!"
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
+
 // this below function is used to update the mechanic
 router.updateMechanic = async (req,res) => {
     let status = 500;
