@@ -175,7 +175,7 @@ router.blockUser = async (req,res) => {
     let {id} = req.params;
 
     await knex("users").where("id",id).update({
-        status : 2
+        active : 2
     }).then(response=>{
         if (response){
             status = 200;
