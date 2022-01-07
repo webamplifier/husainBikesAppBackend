@@ -3,6 +3,7 @@ const router = express.Router();
 const MD5 = require('md5');
 const jwt = require('jsonwebtoken');
 const HELPERS = require('../Helpers/helpers');
+const generateUniqueId = require('generate-unique-id');
 
 // this below route is used for login
 router.login = async (req, res) => {
@@ -320,4 +321,50 @@ router.delete = async (req, res) => {
     return res.json({ status, message })
 }
 
+// this below function is used for forgot password
+router.forgotPassword = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let email = req.body.email;
+
+    await knex("users").where("email",email).then(async response=>{
+        if (response.length > 0){
+            const current_user = response[0];
+
+            if (current_user.active == 2){
+                status = 500;
+                message = "This user is currently blocked!"
+            }else{
+                if (status == 200){
+                    let unique_code = generateUniqueId({
+                        length : 3,
+                        useLetters : false,
+                        useNumbers : true
+                    });
+
+                    unique_code = unique_code.toString() + current_user.id
+                    
+                    await knex("users").where("id",current_user.id).update({
+                        forgot_password_token : unique_code
+                    }).then(async update_response=>{
+                        if (update_response){
+                            await HELPERS.sendMail(email,'forgot-password',{
+                                username : current_user.name,
+                                code : unique_code
+                            }).then(email_response=>{
+                                status = 200;
+                                message = "Email has been sent successfully!"
+                            }).catch(err=>console.log(err))
+                        }
+                    }).catch(err=>console.log(err))
+                }
+            }
+        }else{
+            status = 500;
+            message = "No user found with this email"
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
 module.exports = router;

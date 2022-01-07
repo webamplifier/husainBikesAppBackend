@@ -19,6 +19,7 @@ router.post('/update-push-token',Middlewares.checkAuth,UserController.updatePush
 router.post('/update-mechanic/:id',Middlewares.checkAuth,UserController.updateMechanic)
 router.get('/blockUser/:id',Middlewares.checkAuth,UserController.blockUser)
 router.get('/unBlockUser/:id',Middlewares.checkAuth,UserController.unBlockUser)
+router.post('/forgot-password',UserController.forgotPassword)
 
 // vehicle routes
 router.get('/vehiclelist',Middlewares.checkAuth,VehicleController.list);

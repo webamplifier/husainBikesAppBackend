@@ -1,5 +1,49 @@
 require('dotenv').config();
 const moment = require('moment-timezone');
+const nodemailer = require('nodemailer');
+const HBS = require('nodemailer-express-handlebars');
+const MailConfig = require('../configs/MailConfig');
+
+let transporter = nodemailer.createTransport({
+    service: MailConfig.provider,
+    auth: {
+        user: MailConfig.username,
+        pass: MailConfig.password
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
+let options = {
+    viewEngine: {
+        extName: ".hbs",
+        partialsDir: './views/emails',
+        layoutsDir: './views/emails',
+        defaultLayout: 'layout.hbs',
+    },
+    viewPath: './views/emails',
+    extName: '.hbs'
+}
+
+async function sendMail(to, template, myContext, subject) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            transporter.use("compile", HBS(options));
+            let info = await transporter.sendMail({
+                from: MailConfig.username,
+                to: to,
+                subject: subject,
+                template: template,
+                context: myContext,
+            })
+            resolve()
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 
 function getKnexUuid(knex) {
     return new Promise(function (resolve, reject) {
@@ -49,5 +93,6 @@ module.exports = {
     dateTime,
     current_date,
     tax_arr,
-    sendTheNotification
+    sendTheNotification,
+    sendMail
 }
