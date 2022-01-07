@@ -332,10 +332,10 @@ router.forgotPassword = async (req,res) => {
             const current_user = response[0];
 
             if (current_user.active == 2){
-                status = 500;
+                status = 300;
                 message = "This user is currently blocked!"
             }else{
-                if (status == 200){
+                if (status == 500){
                     let unique_code = generateUniqueId({
                         length : 3,
                         useLetters : false,
@@ -343,6 +343,8 @@ router.forgotPassword = async (req,res) => {
                     });
 
                     unique_code = unique_code.toString() + current_user.id
+
+                    console.log(unique_code)
                     
                     await knex("users").where("id",current_user.id).update({
                         forgot_password_token : unique_code
@@ -351,7 +353,7 @@ router.forgotPassword = async (req,res) => {
                             await HELPERS.sendMail(email,'forgot-password',{
                                 username : current_user.name,
                                 code : unique_code
-                            }).then(email_response=>{
+                            },"Forgot-Password").then(email_response=>{
                                 status = 200;
                                 message = "Email has been sent successfully!"
                             }).catch(err=>console.log(err))
