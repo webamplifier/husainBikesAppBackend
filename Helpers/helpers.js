@@ -5,14 +5,13 @@ const HBS = require('nodemailer-express-handlebars');
 const MailConfig = require('../configs/MailConfig');
 
 let transporter = nodemailer.createTransport({
-    service: MailConfig.provider,
+    host : MailConfig.hostName,
+    port : MailConfig.port,
+    secure : false,
     auth: {
         user: MailConfig.username,
         pass: MailConfig.password
     },
-    tls: {
-        rejectUnauthorized: false
-    }
 })
 
 let options = {
