@@ -228,7 +228,7 @@ router.getServiceDetail = async (req, res) => {
     }).catch(err=>console.log(err))
 
     let query = `SELECT
-    services.remarks,services.user_name,services.assign_dateTime,services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
+    services.user_place,services.remarks,services.user_name,services.assign_dateTime,services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
     FROM
     services
     LEFT JOIN users ON services.user_id = users.id
@@ -317,13 +317,14 @@ router.addKM = async (req, res) => {
     let { id } = req.params;
 
     await knex("services").where("id", id).update({
-        service_km: req.body.km
+        service_km: req.body.km,
+        user_place : req.body.place
     }).then(async response => {
         if (response) {
             await knex("services").where("id", id).then(response_service => {
                 if (response_service.length > 0) {
                     status = 200;
-                    message = "KM updated succesfully!"
+                    message = "KM & place updated succesfully!"
                     socket.emit("changeInService", { "user_id": response_service[0].user_id })
                 }
             })
