@@ -1,7 +1,7 @@
 exports.provider = "smtp"; // provider name : gmail, smtp, sendmail
 // mail configuration for gmail or smtp
 exports.hostName = "mail.husainbikes.com";
-exports.port = 465;
+exports.port = 587;
 exports.isSecure = false; // true for 465, false for other ports
 exports.username = "info@husainbikes.com";
 exports.password = "aliyahya856206";
