@@ -223,7 +223,7 @@ router.getServiceDetail = async (req, res) => {
     let service_detail = {};
     let user_list = [];
 
-    await knex("users").where("role",2).then(response=>{
+    await knex("users").where("role",2).where("active",1).then(response=>{
         user_list = response;
     }).catch(err=>console.log(err))
 
