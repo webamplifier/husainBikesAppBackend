@@ -369,4 +369,68 @@ router.forgotPassword = async (req,res) => {
 
     return res.json({status,message})
 }
+
+// this below function is used to submit the code
+router.forgotPasswordCode = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let email = req.body.email;
+    let code = req.body.code
+
+    await knex("users").where("email",email).where("forgot_password_token",code).then(async response=>{
+        if (response.length > 0){
+            const current_user = response[0];
+
+            if (current_user.active == 2){
+                status = 300;
+                message = "This user is currently blocked!"
+            }else{
+                if (status == 500){
+                    status = 200;
+                    message = "Enter your new password"
+                }
+            }
+        }else{
+            status = 500;
+            message = "No user found with this email"
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
+
+// this below function is used to reset the password
+router.forgotPasswordNew = async (req,res) => {
+    let status = 500;
+    let message = "Oops something went wrong!";
+    let email = req.body.email;
+    let code = req.body.code;
+    let new_password = req.body.password;
+
+    await knex("users").where("email",email).where("forgot_password_token",code).then(async response=>{
+        if (response.length > 0){
+            const current_user = response[0];
+
+            if (current_user.active == 2){
+                status = 300;
+                message = "This user is currently blocked!"
+            }else{
+                if (status == 500){
+                    await knex("users").where("email",email).where("forgot_password_token",code).update({
+                        password : MD5(new_password),
+                        forgot_password_token : ''
+                    }).then(response_after=>{
+                        status = 200;
+                        message = "Password has been reset successfully!"
+                    }).catch(err=>console.log(err))
+                }
+            }
+        }else{
+            status = 500;
+            message = "No user found with this email"
+        }
+    }).catch(err=>console.log(err))
+
+    return res.json({status,message})
+}
 module.exports = router;

@@ -20,6 +20,8 @@ router.post('/update-mechanic/:id',Middlewares.checkAuth,UserController.updateMe
 router.get('/blockUser/:id',Middlewares.checkAuth,UserController.blockUser)
 router.get('/unBlockUser/:id',Middlewares.checkAuth,UserController.unBlockUser)
 router.post('/forgot-password',UserController.forgotPassword)
+router.post('/forgot-password-code',UserController.forgotPasswordCode)
+router.post('/forgot-password-code-password',UserController.forgotPasswordNew)
 
 // vehicle routes
 router.get('/vehiclelist',Middlewares.checkAuth,VehicleController.list);
