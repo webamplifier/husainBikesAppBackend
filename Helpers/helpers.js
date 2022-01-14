@@ -9,6 +9,7 @@ let transporter = nodemailer.createTransport({
     port : MailConfig.port,
     auth: {
         user: MailConfig.username,
+        // pass: process.env.password
         pass: MailConfig.password
     },
     tls: {
