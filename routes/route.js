@@ -45,16 +45,16 @@ router.get("/fetch-mechanic-pending-services",Middlewares.checkAuth,ServiceContr
 // fetch bikes
 router.get('/fetchBikes',async (req,res) => {
     let bikes = [
-        'Honda unicorn CB160',
-        'Bajaj boxer bm150',
-        'Hero hunk 150',
-        'Tvs appache rtr 180',
-        'Tvs stryker 125',
-        'Bajaj pulsar 150',
-        'Tvs xl-super heavy duty  70',
-        'Tvs star city',
-        'Bajaj platina',
-        'Other'
+        'Honda Unicorn CB160cc',
+        'Bajaj Boxer BM150cc',
+        'Hero Hunk 150cc',
+        'Tvs Stryker 125cc',
+        'Tvs Appache RTR 180cc',
+        'Suzuki Gixxer 150cc',
+        'Bajaj Platina 100cc',
+        'Tvs XL super 70cc',
+        "Bajaj Pulsar 150cc",
+        'Other Bikes'
     ]
 
     return res.json({status : 200,message : 'Bikes has been fetched successfully!',bikes})

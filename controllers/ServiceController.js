@@ -52,11 +52,11 @@ router.create = async (req, res) => {
         demand_dateTime: await HELPERS.dateTime(),
     }
 
-    await knex('services').where("user_id",req.user_data.id).where("status", '!=' , 4).where("status", '!=' , 5).then(async response_service=>{
-        if (response_service.length > 0){
+    await knex('services').where("user_id", req.user_data.id).where("status", '!=', 4).where("status", '!=', 5).then(async response_service => {
+        if (response_service.length > 0) {
             status = 500;
             message = "Service already pending!."
-        }else{
+        } else {
             await knex('services').insert(create_obj).then(async response => {
                 if (response) {
                     await HELPERS.sendTheNotification(knex).then(response_token => {
@@ -75,18 +75,18 @@ router.create = async (req, res) => {
 }
 
 // this below function is used to fetch the assigned pending service
-router.fetchMechanicPendingService = async (req,res) => {
+router.fetchMechanicPendingService = async (req, res) => {
     let status = 500;
     let message = "Oops something went wrong!";
     let services = [];
 
-    await knex("services").where("assign_id",req.user_data.id).where("status",2).then(response=>{
+    await knex("services").where("assign_id", req.user_data.id).where("status", 2).then(response => {
         status = 200;
         message = "Services has been fetched successfully!";
         services = response;
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 
-    return res.json({status,message,services})
+    return res.json({ status, message, services })
 }
 
 //this is to assign a service
@@ -106,46 +106,42 @@ router.assign = async (req, res) => {
 
     await knex('services').where('id', id).update(assign_obj).then(async response => {
         if (response) {
-            await knex("users").where("id",inputs.mechanic_id).then(response_1 => {
-                if (response_1.length > 0){
+            await knex("users").where("id", inputs.mechanic_id).then(response_1 => {
+                if (response_1.length > 0) {
                     const push_token = response_1[0].push_token
-                    if (push_token){
+                    if (push_token) {
                         tokens.push(push_token)
                     }
                 }
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err))
 
-            await knex("services").where("id",id).then(async response_2 => {
-                if (response_2.length > 0){
+            await knex("services").where("id", id).then(async response_2 => {
+                if (response_2.length > 0) {
                     let user_id = response_2[0].user_id;
 
-                    await knex("users").where("id",user_id).then(response_3 => {
-                        if (response_3.length > 0){
+                    await knex("users").where("id", user_id).then(response_3 => {
+                        if (response_3.length > 0) {
                             const push_token = response_3[0].push_token;
-                            if (push_token){
+                            if (push_token) {
                                 tokens.push(response_3[0].push_token)
                             }
                         }
-                    }).catch(err=>console.log(err))
+                    }).catch(err => console.log(err))
 
-                    socket.emit("changeInService",{"user_id" : user_id})
+                    socket.emit("changeInService", { "user_id": user_id })
                 }
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err))
 
             status = 200;
             message = 'Service has been assigned successfully!';
         }
     }).catch(err => console.log(err))
 
-    if (tokens.length > 0){
-        return res.json({ status, message,tokens })
-        
-    }
-
+    return res.json({ status, message, tokens })
 }
 
 // this is to cancel the service
-router.canceled = async (req,res) => {
+router.canceled = async (req, res) => {
     let status = 500;
     let message = 'Oops something went wrong!';
     let { id } = req.params;
@@ -153,34 +149,34 @@ router.canceled = async (req,res) => {
     let reached_obj = {
         complete_dateTime: await HELPERS.dateTime(),
         status: 5,
-        remarks : inputs.remarks 
+        remarks: inputs.remarks
     }
 
     let tokens = [];
     let query = "select * from users where "
-    await knex("services").where("id",id).update(reached_obj).then(async response=>{
-        if (response){
+    await knex("services").where("id", id).update(reached_obj).then(async response => {
+        if (response) {
             status = 200;
             message = "Service has been cancelled successfully!"
-            await knex("services").where("id",id).then(async response1=>{
-                if (response1.length > 0){
-                    socket.emit("changeInService",{user_id : response1[1].assign_id})
+            await knex("services").where("id", id).then(async response1 => {
+                if (response1.length > 0) {
+                    socket.emit("changeInService", { user_id: response1[1].assign_id })
                     query = query + `id = '${response1[0].assign_id}' or id = '${response1[0].user_id}' or role = 1`
 
-                    await knex.raw(query).then(response_token=>{
-                        if (response_token.length > 0){
-                            for (let i=0;i<response_token.length;i++){
+                    await knex.raw(query).then(response_token => {
+                        if (response_token.length > 0) {
+                            for (let i = 0; i < response_token.length; i++) {
                                 tokens.push(response_token[i].push_token)
                             }
                         }
-                    }).catch(err=>console.log(err))
+                    }).catch(err => console.log(err))
                 }
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err))
         }
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 
-    if (tokens.length > 0){
-        return res.json({status,message,tokens})
+    if (tokens.length > 0) {
+        return res.json({ status, message, tokens })
     }
 }
 
@@ -223,9 +219,9 @@ router.getServiceDetail = async (req, res) => {
     let service_detail = {};
     let user_list = [];
 
-    await knex("users").where("role",2).where("active",1).then(response=>{
+    await knex("users").where("role", 2).where("active", 1).then(response => {
         user_list = response;
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 
     let query = `SELECT
     services.user_place,services.remarks,services.user_name,services.assign_dateTime,services.id,users.push_token,services.service_km,services.vehicle_name,services.user_latitude,services.user_longitude,services.description,services.assign_name,services.status,vehicles.bike_number_plate,services.demand_dateTime,services.reached_dateTime,services.complete_dateTime,users.company_name,userAsign.mobile,users.mobile as customer_mobile
@@ -245,7 +241,7 @@ router.getServiceDetail = async (req, res) => {
         }
     }).catch(err => console.log(err))
 
-    return res.json({ status, message, service_detail,user_list })
+    return res.json({ status, message, service_detail, user_list })
 }
 
 //this is to complete a service
@@ -318,7 +314,7 @@ router.addKM = async (req, res) => {
 
     await knex("services").where("id", id).update({
         service_km: req.body.km,
-        user_place : req.body.place
+        user_place: req.body.place
     }).then(async response => {
         if (response) {
             await knex("services").where("id", id).then(response_service => {
