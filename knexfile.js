@@ -9,7 +9,7 @@ module.exports = {
             pass: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
             charset: 'utf8mb4',
-            timezone: 'GMT+5.30',
+            timezone: 'GMT+3',
             typeCast: function (field, next) {
                 if (field.type == 'DATETIME') {
                     return moment(field.string()).format('YYYY-MM-DD HH:mm:ss');
@@ -47,7 +47,7 @@ module.exports = {
             pass: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
             charset: 'utf8mb4',
-            timezone: 'GMT+5.30',
+            timezone: 'GMT+3',
             typeCast: function (field, next) {
                 if (field.type == 'DATETIME') {
                     return moment(field.string()).format('YYYY-MM-DD HH:mm:ss');
